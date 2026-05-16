@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #a855f7;
+  --color-primary-hover: #c084fc;
+  --color-secondary: #06b6d4;
+  --color-secondary-hover: #22d3ee;
+  --color-accent: #f97316;
+  --color-accent-hover: #fb923c;
+  
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Orbitron', 'Russo One', sans-serif;
+}
+
+/* Base Styles */
+@layer base {
+  body {
+    @apply bg-[#09090b] text-gray-100 font-sans antialiased overflow-x-hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-wider;
+  }
+}
+
+/* Custom Utilities for Neon Effects & Glassmorphism */
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-xl;
+  }
+  
+  .glass-panel-hover {
+    @apply hover:bg-white/10 hover:border-white/20 transition-all duration-300;
+  }
+
+  .neon-text-primary {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.7), 0 0 20px rgba(168, 85, 247, 0.5);
+  }
+  
+  .neon-text-secondary {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.7), 0 0 20px rgba(6, 182, 212, 0.5);
+  }
+
+  .neon-border-primary {
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.3), inset 0 0 10px rgba(168, 85, 247, 0.1);
+    @apply border border-purple-500/50;
+  }
+  
+  .neon-border-secondary {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.3), inset 0 0 10px rgba(6, 182, 212, 0.1);
+    @apply border border-cyan-500/50;
+  }
+
+  .btn-primary {
+    @apply relative px-6 py-3 font-heading font-bold text-white uppercase tracking-wider 
+           bg-gradient-to-r from-purple-600 to-fuchsia-600 rounded-lg overflow-hidden
+           hover:from-purple-500 hover:to-fuchsia-500 transition-all duration-300
+           shadow-[0_0_15px_rgba(168,85,247,0.5)] hover:shadow-[0_0_25px_rgba(168,85,247,0.8)]
+           transform hover:-translate-y-1 active:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply relative px-6 py-3 font-heading font-bold text-white uppercase tracking-wider 
+           bg-transparent border-2 border-cyan-500 rounded-lg overflow-hidden
+           hover:bg-cyan-500/10 transition-all duration-300
+           shadow-[0_0_10px_rgba(6,182,212,0.3)] hover:shadow-[0_0_20px_rgba(6,182,212,0.6)]
+           transform hover:-translate-y-1 active:translate-y-0;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.8); }
+  100% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0; /* Starts hidden until animation plays */
+}
+
+/* Hexagon background pattern */
+.bg-hex-pattern {
+  background-image: 
+    linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)),
+    url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M54.627 0l5.373 3.102v6.204l-5.373 3.103L29.999 43.435 5.373 29.227l5.373-3.102V19.92L5.373 16.819 0 19.921v20.158l30 17.32 30-17.32V19.92l-5.373-3.102zm-29.255 1.74l1.321-.762 1.32.761v1.523l-1.32.762-1.32-.762V1.74zm-20 34.64l1.321-.762 1.32.761v1.523l-1.32.762-1.32-.762v-1.523zm40 0l1.321-.762 1.32.761v1.523l-1.32.762-1.32-.762v-1.523zM25.372 26.126l-5.372-3.103v-6.204l5.372-3.103 24.627 14.218-5.373 3.103v6.203l-5.372 3.103-24.628-14.218h.001zM10.745 13.064L5.373 9.96V3.757l5.372-3.103L35.373 14.87l-5.373 3.103v6.204l5.373 3.103-24.628-14.216zm38.51 0l-5.372-3.103V3.757l5.372-3.103L54.627 14.87l-5.373 3.103v6.204l5.373 3.103-24.628-14.216z" fill="%23a855f7" fill-opacity="0.03" fill-rule="evenodd"/%3E%3C/svg%3E');
+}
