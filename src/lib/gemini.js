@@ -19,8 +19,8 @@ function fileToGenerativePart(file) {
 
 export const parseScreenshots = async (files) => {
   try {
-    // Reverting to gemini-2.5-flash as it is supported by your API key
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); 
+    // Reverting to gemini-1.5-flash as it has a higher free tier daily quota
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); 
     
     // Convert all files to generative parts
     const imageParts = await Promise.all(files.map(fileToGenerativePart));
