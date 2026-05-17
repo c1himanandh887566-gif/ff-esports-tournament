@@ -35,11 +35,7 @@ const Stats = () => {
 
     if (!players || players.length === 0) return defaults;
 
-    const mvp = [...players].sort((a, b) => {
-      const avgA = a.matchesPlayed ? (a.totalRating || 0) / a.matchesPlayed : 0;
-      const avgB = b.matchesPlayed ? (b.totalRating || 0) / b.matchesPlayed : 0;
-      return avgB - avgA || (b.kills || 0) - (a.kills || 0);
-    })[0];
+    const mvp = [...players].sort((a, b) => (b.mvps || 0) - (a.mvps || 0))[0];
     const mostKills = [...players].sort((a, b) => (b.kills || 0) - (a.kills || 0))[0];
     const mostRevives = [...players].sort((a, b) => (b.revives || 0) - (a.revives || 0))[0];
     const mostAssists = [...players].sort((a, b) => (b.assists || 0) - (a.assists || 0))[0];
@@ -54,9 +50,9 @@ const Stats = () => {
       {
         id: 'mvps',
         badge: 'Tournament MVP',
-        name: mvp?.matchesPlayed > 0 && mvp?.totalRating > 0 ? mvp.name : 'TBD',
-        team: mvp?.matchesPlayed > 0 && mvp?.totalRating > 0 ? mvp.team : 'TBD',
-        value: mvp?.matchesPlayed > 0 && mvp?.totalRating > 0 ? `${(mvp.totalRating / mvp.matchesPlayed).toFixed(1)} Avg Rating` : '0.0 Avg Rating',
+        name: mvp?.mvps > 0 ? mvp.name : 'TBD',
+        team: mvp?.mvps > 0 ? mvp.team : 'TBD',
+        value: mvp?.mvps > 0 ? `${mvp.mvps} MVPs` : '0 MVPs',
         icon: <Trophy className="w-8 h-8" />,
         color: 'text-yellow-400', bg: 'bg-yellow-400/20', border: 'border-yellow-400/30'
       },

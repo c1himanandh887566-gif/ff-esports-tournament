@@ -4,11 +4,7 @@ import { X, Trophy, Medal } from 'lucide-react';
 const StatRankingModal = ({ stat, players, onClose }) => {
   // Determine how to sort and display the values based on the stat ID
   const sortedPlayers = [...players].sort((a, b) => {
-    if (stat.id === 'mvps') {
-      const avgA = a.matchesPlayed ? (a.totalRating || 0) / a.matchesPlayed : 0;
-      const avgB = b.matchesPlayed ? (b.totalRating || 0) / b.matchesPlayed : 0;
-      return avgB - avgA || (b.kills || 0) - (a.kills || 0);
-    }
+
     if (stat.id === 'hs') {
       const avgA = a.matchesPlayed ? (a.totalHsPercentage || 0) / a.matchesPlayed : 0;
       const avgB = b.matchesPlayed ? (b.totalHsPercentage || 0) / b.matchesPlayed : 0;
@@ -19,10 +15,7 @@ const StatRankingModal = ({ stat, players, onClose }) => {
   });
 
   const getDisplayValue = (player) => {
-    if (stat.id === 'mvps') {
-      const avg = player.matchesPlayed ? (player.totalRating || 0) / player.matchesPlayed : 0;
-      return `${avg.toFixed(1)} Avg Rating`;
-    }
+    if (stat.id === 'mvps') return `${player.mvps || 0} MVPs`;
     if (stat.id === 'hs') {
       const avg = player.matchesPlayed ? (player.totalHsPercentage || 0) / player.matchesPlayed : 0;
       return `${avg.toFixed(2)}% Avg HS`;

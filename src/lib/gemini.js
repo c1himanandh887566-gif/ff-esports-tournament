@@ -46,7 +46,7 @@ export const parseScreenshots = async (files) => {
             "dmg": (number, Damage),
             "revives": (number, Help Up / Revives),
             "hs": (string, Headshot Rate percentage like "25.00%"),
-            "rating": (number, the rating shown next to the player's name, e.g., 14.2),
+            "mvp": (boolean, true if the player has the MVP crest/badge next to their name or is the clear top performer on the winning team, otherwise false),
             "isLeftTeam": (boolean, true if this player belongs to the left team, false if they belong to the right team)
           }
         ]
