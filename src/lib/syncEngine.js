@@ -70,6 +70,8 @@ export const identifyPlayer = (extractedName, registeredNames) => {
     if (dist < minDistance && dist <= 4) { 
       minDistance = dist;
       bestMatch = regName;
+    }
+  }
   return bestMatch;
 };
 
