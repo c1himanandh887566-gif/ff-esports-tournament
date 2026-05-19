@@ -309,7 +309,6 @@ export const publishMatchResult = async (match, parsedTeamsData, matchScores) =>
       const dmg = parseInt(player.dmg || 0);
       const isMvp = player.mvp ? 1 : 0;
       const hsPercentage = player.hs ? parseFloat(player.hs.replace('%', '')) : 0;
-      const playerRating = player.rating ? parseFloat(player.rating) : 0;
 
       // Fuzzy match the extracted name against the registered tournament players
       const registeredNames = Object.keys(allPlayersMap);
@@ -324,8 +323,7 @@ export const publishMatchResult = async (match, parsedTeamsData, matchScores) =>
           damage: (pData.damage || 0) + dmg,
           mvps: (pData.mvps || 0) + isMvp,
           matchesPlayed: (pData.matchesPlayed || 0) + 1,
-          totalHsPercentage: (pData.totalHsPercentage || 0) + hsPercentage,
-          totalRating: (pData.totalRating || 0) + playerRating
+          totalHsPercentage: (pData.totalHsPercentage || 0) + hsPercentage
         });
       } else {
         // If the player is a random/non-tournament player or OCR failed completely,

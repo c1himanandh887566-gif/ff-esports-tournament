@@ -491,7 +491,7 @@ export const tournamentStats = {
 
 // Empty player stats to start
 export const playerStats = {
-  mvp: { name: "TBD", team: "TBD", value: "0 Rating", icon: "🏆", badge: "Gold Badge", color: "text-yellow-400", bg: "bg-yellow-400/20", border: "border-yellow-400/30" },
+  mvp: { name: "TBD", team: "TBD", value: "0 MVPs", icon: "🏆", badge: "Gold Badge", color: "text-yellow-400", bg: "bg-yellow-400/20", border: "border-yellow-400/30" },
   mostKills: { name: "TBD", team: "TBD", value: "0 Kills", icon: "⚔️", badge: "Orange Badge", color: "text-orange-500", bg: "bg-orange-500/20", border: "border-orange-500/30" },
   mostRevives: { name: "TBD", team: "TBD", value: "0 Revives", icon: "💚", badge: "Green Badge", color: "text-green-500", bg: "bg-green-500/20", border: "border-green-500/30" },
   mostAssists: { name: "TBD", team: "TBD", value: "0 Assists", icon: "🤝", badge: "Purple Badge", color: "text-purple-500", bg: "bg-purple-500/20", border: "border-purple-500/30" },

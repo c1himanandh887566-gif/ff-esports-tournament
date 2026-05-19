@@ -84,6 +84,35 @@ export default async function handler(req, res) {
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
     
     const parsedData = JSON.parse(text);
+    
+    // Enforce exactly 1 MVP per team (left and right)
+    if (parsedData.players && Array.isArray(parsedData.players)) {
+      const leftTeam = parsedData.players.filter(p => p.isLeftTeam);
+      const rightTeam = parsedData.players.filter(p => !p.isLeftTeam);
+
+      const enforceTeamMvp = (teamPlayers) => {
+        let mvps = teamPlayers.filter(p => p.mvp);
+        if (mvps.length !== 1 && teamPlayers.length > 0) {
+          // If multiple or zero MVPs, select the best player based on kills, then damage
+          const pool = mvps.length > 1 ? mvps : teamPlayers;
+          pool.sort((a, b) => {
+            const killsA = parseInt(a.k || 0);
+            const killsB = parseInt(b.k || 0);
+            if (killsA !== killsB) return killsB - killsA;
+            return parseInt(b.dmg || 0) - parseInt(a.dmg || 0);
+          });
+          
+          teamPlayers.forEach(p => p.mvp = false);
+          if (pool.length > 0) {
+            pool[0].mvp = true;
+          }
+        }
+      };
+
+      enforceTeamMvp(leftTeam);
+      enforceTeamMvp(rightTeam);
+    }
+
     return res.status(200).json(parsedData);
   } catch (error) {
     console.error("Error parsing screenshots:", error);

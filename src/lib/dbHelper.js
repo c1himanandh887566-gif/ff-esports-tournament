@@ -52,8 +52,7 @@ export const seedDatabase = async () => {
         revives: 0,
         mvps: 0,
         matchesPlayed: 0,
-        totalHsPercentage: 0,
-        totalRating: 0
+        totalHsPercentage: 0
       });
     });
   });

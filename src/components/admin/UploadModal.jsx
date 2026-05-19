@@ -186,18 +186,29 @@ const UploadModal = ({ match, onClose }) => {
                       <th className="p-3 text-center">Damage</th>
                       <th className="p-3 text-center">Revives</th>
                       <th className="p-3 text-center">Headshot %</th>
-                      <th className="p-3 text-center">Rating</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {teamData.map((player) => (
                       <tr key={player.id || player.name}>
-                        <td className="p-3 text-white font-bold">{player.name}</td>
+                        <td className="p-3 text-white font-bold">
+                          <div className="flex items-center gap-2">
+                            {player.name}
+                            {player.mvp && (
+                              <span className={`px-2 py-0.5 text-[10px] uppercase font-black rounded border ${
+                                (player.isLeftTeam && matchScores.left > matchScores.right) || (!player.isLeftTeam && matchScores.right > matchScores.left)
+                                  ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50'
+                                  : 'bg-gray-400/20 text-gray-300 border-gray-400/50'
+                              }`}>
+                                MVP
+                              </span>
+                            )}
+                          </div>
+                        </td>
                         <td className="p-3 text-center text-gray-300">{player.k}/{player.d}/{player.a}</td>
                         <td className="p-3 text-center text-white">{player.dmg}</td>
                         <td className="p-3 text-center text-white">{player.revives}</td>
                         <td className="p-3 text-center text-cyan-400 font-medium">{player.hs || '0%'}</td>
-                        <td className="p-3 text-center text-yellow-400 font-bold">{player.rating || '0.0'}</td>
                       </tr>
                     ))}
                   </tbody>
