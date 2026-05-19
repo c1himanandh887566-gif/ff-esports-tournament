@@ -78,7 +78,7 @@ const LiveStandings = ({ isPreview = false }) => {
                   <tr 
                     key={team.team} 
                     className={`transition-colors hover:bg-white/5 ${
-                      index < 4 ? 'bg-gradient-to-r from-purple-900/10 to-transparent relative border-l-4 border-l-purple-500' : ''
+                      index < 3 ? 'bg-gradient-to-r from-purple-900/10 to-transparent relative border-l-4 border-l-purple-500' : ''
                     }`}
                   >
                     <td className="p-2 md:p-6 text-center md:text-left">
@@ -86,8 +86,7 @@ const LiveStandings = ({ isPreview = false }) => {
                         <span className={`font-heading font-bold text-sm md:text-lg ${
                           index === 0 ? 'text-yellow-400' : 
                           index === 1 ? 'text-gray-400' : 
-                          index === 2 ? 'text-amber-700' : 
-                          index === 3 ? 'text-purple-400' : 'text-gray-500'
+                          index === 2 ? 'text-amber-700' : 'text-gray-500'
                         }`}>
                           #{team.rank}
                         </span>
@@ -112,7 +111,7 @@ const LiveStandings = ({ isPreview = false }) => {
             <li><span className="text-white font-bold">Win:</span> 5 points</li>
             <li><span className="text-white font-bold">Loss by 3 or less rounds:</span> 2 points</li>
           </ul>
-          <p className="text-purple-400 font-bold text-base uppercase tracking-wider">Top 4 teams qualify for playoffs.</p>
+          <p className="text-purple-400 font-bold text-base uppercase tracking-wider">Top 3 teams qualify for playoffs.</p>
         </div>
         
         {isPreview && (
