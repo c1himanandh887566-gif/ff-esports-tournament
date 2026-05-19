@@ -70,10 +70,116 @@ export const identifyPlayer = (extractedName, registeredNames) => {
     if (dist < minDistance && dist <= 4) { 
       minDistance = dist;
       bestMatch = regName;
-    }
-  }
-  
   return bestMatch;
+};
+
+export const checkAndProgressBracket = async (allTeams) => {
+  try {
+    const matchesSnap = await getDocs(collection(db, 'matches'));
+    const allMatches = matchesSnap.docs.map(d => d.data());
+    
+    // 1. Check League Stage Completion
+    const leagueMatches = allMatches.filter(m => m.type === 'League Stage');
+    const allLeagueCompleted = leagueMatches.length > 0 && leagueMatches.every(m => m.status === 'completed');
+    
+    const batch = writeBatch(db);
+    let needsUpdate = false;
+
+    if (allLeagueCompleted) {
+      // Get Standings sorted
+      const standingsSnap = await getDocs(collection(db, 'standings'));
+      let standingsData = standingsSnap.docs.map(d => d.data());
+      standingsData.sort((a, b) => b.points - a.points || b.nrr - a.nrr);
+      
+      const getTeamData = (teamName) => {
+        const t = allTeams.find(t => t.name === teamName);
+        return {
+          name: t ? t.name : teamName,
+          logo: t ? t.logo : 'https://ui-avatars.com/api/?name=UNK&background=8b5cf6&color=fff'
+        };
+      };
+
+      const top1 = getTeamData(standingsData[0]?.team);
+      const top2 = getTeamData(standingsData[1]?.team);
+      const top3 = getTeamData(standingsData[2]?.team);
+
+      // Populate Match 21 (Qualifier) if not already populated
+      const match21 = allMatches.find(m => m.id === 21);
+      if (match21 && match21.team1?.name === 'Rank 1') {
+        batch.update(doc(db, 'matches', '21'), {
+          team1: top1,
+          team2: top2
+        });
+        needsUpdate = true;
+      }
+
+      // Populate Match 22 (Eliminator) team1 if not already populated
+      const match22 = allMatches.find(m => m.id === 22);
+      if (match22 && match22.team1?.name === 'Rank 3') {
+        batch.update(doc(db, 'matches', '22'), {
+          team1: top3
+        });
+        needsUpdate = true;
+      }
+    }
+
+    // 2. Check Qualifier Completion (Match 21)
+    const match21 = allMatches.find(m => m.id === 21);
+    if (match21 && match21.status === 'completed' && match21.winner && match21.winner !== 'Unknown') {
+      const winnerName = match21.winner;
+      const loserName = match21.team1.name === winnerName ? match21.team2.name : match21.team1.name;
+      
+      const getTeamData = (teamName) => {
+        const t = allTeams.find(t => t.name === teamName);
+        return { name: teamName, logo: t ? t.logo : 'https://ui-avatars.com/api/?name=UNK' };
+      };
+
+      // Populate Match 23 (Grand Final) team1
+      const match23 = allMatches.find(m => m.id === 23);
+      if (match23 && match23.team1?.name === 'Winner Q1') {
+        batch.update(doc(db, 'matches', '23'), {
+          team1: getTeamData(winnerName)
+        });
+        needsUpdate = true;
+      }
+
+      // Populate Match 22 (Eliminator) team2
+      const match22 = allMatches.find(m => m.id === 22);
+      if (match22 && match22.team2?.name === 'Loser Q1') {
+        batch.update(doc(db, 'matches', '22'), {
+          team2: getTeamData(loserName)
+        });
+        needsUpdate = true;
+      }
+    }
+
+    // 3. Check Eliminator Completion (Match 22)
+    const match22 = allMatches.find(m => m.id === 22);
+    if (match22 && match22.status === 'completed' && match22.winner && match22.winner !== 'Unknown') {
+      const winnerName = match22.winner;
+      
+      const getTeamData = (teamName) => {
+        const t = allTeams.find(t => t.name === teamName);
+        return { name: teamName, logo: t ? t.logo : 'https://ui-avatars.com/api/?name=UNK' };
+      };
+
+      // Populate Match 23 (Grand Final) team2
+      const match23 = allMatches.find(m => m.id === 23);
+      if (match23 && match23.team2?.name === 'Winner Elim') {
+        batch.update(doc(db, 'matches', '23'), {
+          team2: getTeamData(winnerName)
+        });
+        needsUpdate = true;
+      }
+    }
+
+    if (needsUpdate) {
+      await batch.commit();
+      console.log("Bracket progressed automatically.");
+    }
+  } catch (err) {
+    console.error("Failed to progress bracket:", err);
+  }
 };
 
 export const publishMatchResult = async (match, parsedTeamsData, matchScores) => {
@@ -239,6 +345,10 @@ export const publishMatchResult = async (match, parsedTeamsData, matchScores) =>
     });
 
     await batch.commit();
+
+    // Check and trigger bracket progression
+    await checkAndProgressBracket(allTeams);
+
     return { success: true, winningTeam, losingTeam };
     
   } catch (error) {
